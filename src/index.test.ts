@@ -4,10 +4,65 @@ import { describe, it, expect } from 'vitest';
 // All modules
 import utilityBelt from './index';
 
-// Individual modules
+// Named exports for individual modules
 import { atomicUnit, cookie, cryptocurrency, currency, delay, email, number, object, string, time } from './index';
 
-describe('index importing', () => {
+// Named exports for individual functions
+import {
+	convertNumberToAtomicUnit,
+	convertAtomicUnitToBigNumber,
+	parseValueFromCookie,
+	cryptoMinusShiftedToBigNumberType,
+	cryptoShiftedToBigNumberType,
+	getCurrencyFullName,
+	getCurrencySymbol,
+	formatAndAddCurrencySymbol,
+	labelCurrency,
+	isEmailValid,
+	isNumber,
+	stringToBigNumber,
+	absoluteToBigNumber,
+	truncateNumberToBigNumber,
+	roundNumberToBigNumber,
+	roundUpNumberToBigNumber,
+	roundDownNumberToBigNumber,
+	formatNumber,
+	countDecimalPlaces,
+	labelNumber,
+	isObjectEmpty,
+	countValueInArrayOfObjects,
+	capitalizeFirstLetterOnly,
+	replaceLastCommaByDot,
+	isStringContainsNumber,
+	removeNonNumericCharactersFromString,
+	removeNumbersFromString,
+	numberToString,
+	normalizeString,
+	slugifyString,
+	getStringDifferenceFromNow,
+	getStringDifferenceToNow,
+	getStringDifferenceFromDateTime,
+	getStringDifferenceToDateTime,
+	isDateBetween,
+	isDateSame,
+	isDateSameOrBefore,
+	isDateSameOrAfter,
+	isDateYesterday,
+	isDateToday,
+	isDateTomorrow,
+	isDateLeapYear,
+	howManyLeapDayInLastYears,
+	daysInCurrentYear,
+	daysSinceStartOfCurrentYear,
+	guessUserTimezone,
+	changeTimezone,
+	currentUtcTime,
+	isDateUtc,
+	convertDateToUTC,
+	convertDateToLocalTime,
+} from './index';
+
+describe('all modules importing', () => {
 	it('should import all modules', () => {
 		expect(utilityBelt).toBeDefined();
 	});
@@ -123,7 +178,7 @@ describe('index importing', () => {
 	});
 });
 
-describe('index individual importing', () => {
+describe('Named exports for individual modules importing', () => {
 	it('should import with individual import atomicUnit', () => {
 		expect(atomicUnit).toBeDefined();
 
@@ -223,5 +278,215 @@ describe('index individual importing', () => {
 		expect(time.isDateUtc).toBeDefined();
 		expect(time.convertDateToUTC).toBeDefined();
 		expect(time.convertDateToLocalTime).toBeDefined();
+	});
+});
+
+describe('Named exports for individual functions importing', () => {
+	it('should import with individual import convertNumberToAtomicUnit', () => {
+		expect(convertNumberToAtomicUnit).toBeDefined();
+	});
+
+	it('should import with individual import convertAtomicUnitToBigNumber', () => {
+		expect(convertAtomicUnitToBigNumber).toBeDefined();
+	});
+
+	it('should import with individual import parseValueFromCookie', () => {
+		expect(parseValueFromCookie).toBeDefined();
+	});
+
+	it('should import with individual import cryptoMinusShiftedToBigNumberType', () => {
+		expect(cryptoMinusShiftedToBigNumberType).toBeDefined();
+	});
+
+	it('should import with individual import cryptoShiftedToBigNumberType', () => {
+		expect(cryptoShiftedToBigNumberType).toBeDefined();
+	});
+
+	it('should import with individual import getCurrencyFullName', () => {
+		expect(getCurrencyFullName).toBeDefined();
+	});
+
+	it('should import with individual import getCurrencySymbol', () => {
+		expect(getCurrencySymbol).toBeDefined();
+	});
+
+	it('should import with individual import formatAndAddCurrencySymbol', () => {
+		expect(formatAndAddCurrencySymbol).toBeDefined();
+	});
+
+	it('should import with individual import labelCurrency', () => {
+		expect(labelCurrency).toBeDefined();
+	});
+
+	it('should import with individual import isEmailValid', () => {
+		expect(isEmailValid).toBeDefined();
+	});
+
+	it('should import with individual import isNumber', () => {
+		expect(isNumber).toBeDefined();
+	});
+
+	it('should import with individual import stringToBigNumber', () => {
+		expect(stringToBigNumber).toBeDefined();
+	});
+
+	it('should import with individual import absoluteToBigNumber', () => {
+		expect(absoluteToBigNumber).toBeDefined();
+	});
+
+	it('should import with individual import truncateNumberToBigNumber', () => {
+		expect(truncateNumberToBigNumber).toBeDefined();
+	});
+
+	it('should import with individual import roundNumberToBigNumber', () => {
+		expect(roundNumberToBigNumber).toBeDefined();
+	});
+
+	it('should import with individual import roundUpNumberToBigNumber', () => {
+		expect(roundUpNumberToBigNumber).toBeDefined();
+	});
+
+	it('should import with individual import roundDownNumberToBigNumber', () => {
+		expect(roundDownNumberToBigNumber).toBeDefined();
+	});
+
+	it('should import with individual import formatNumber', () => {
+		expect(formatNumber).toBeDefined();
+	});
+
+	it('should import with individual import countDecimalPlaces', () => {
+		expect(countDecimalPlaces).toBeDefined();
+	});
+
+	it('should import with individual import labelNumber', () => {
+		expect(labelNumber).toBeDefined();
+	});
+
+	it('should import with individual import isObjectEmpty', () => {
+		expect(isObjectEmpty).toBeDefined();
+	});
+
+	it('should import with individual import countValueInArrayOfObjects', () => {
+		expect(countValueInArrayOfObjects).toBeDefined();
+	});
+
+	it('should import with individual import capitalizeFirstLetterOnly', () => {
+		expect(capitalizeFirstLetterOnly).toBeDefined();
+	});
+
+	it('should import with individual import replaceLastCommaByDot', () => {
+		expect(replaceLastCommaByDot).toBeDefined();
+	});
+
+	it('should import with individual import isStringContainsNumber', () => {
+		expect(isStringContainsNumber).toBeDefined();
+	});
+
+	it('should import with individual import removeNonNumericCharactersFromString', () => {
+		expect(removeNonNumericCharactersFromString).toBeDefined();
+	});
+
+	it('should import with individual import removeNumbersFromString', () => {
+		expect(removeNumbersFromString).toBeDefined();
+	});
+
+	it('should import with individual import numberToString', () => {
+		expect(numberToString).toBeDefined();
+	});
+
+	it('should import with individual import normalizeString', () => {
+		expect(normalizeString).toBeDefined();
+	});
+
+	it('should import with individual import slugifyString', () => {
+		expect(slugifyString).toBeDefined();
+	});
+
+	it('should import with individual import getStringDifferenceFromNow', () => {
+		expect(getStringDifferenceFromNow).toBeDefined();
+	});
+
+	it('should import with individual import getStringDifferenceToNow', () => {
+		expect(getStringDifferenceToNow).toBeDefined();
+	});
+
+	it('should import with individual import getStringDifferenceFromDateTime', () => {
+		expect(getStringDifferenceFromDateTime).toBeDefined();
+	});
+
+	it('should import with individual import getStringDifferenceToDateTime', () => {
+		expect(getStringDifferenceToDateTime).toBeDefined();
+	});
+
+	it('should import with individual import isDateBetween', () => {
+		expect(isDateBetween).toBeDefined();
+	});
+
+	it('should import with individual import isDateSame', () => {
+		expect(isDateSame).toBeDefined();
+	});
+
+	it('should import with individual import isDateSameOrBefore', () => {
+		expect(isDateSameOrBefore).toBeDefined();
+	});
+
+	it('should import with individual import isDateSameOrAfter', () => {
+		expect(isDateSameOrAfter).toBeDefined();
+	});
+
+	it('should import with individual import isDateYesterday', () => {
+		expect(isDateYesterday).toBeDefined();
+	});
+
+	it('should import with individual import isDateToday', () => {
+		expect(isDateToday).toBeDefined();
+	});
+
+	it('should import with individual import isDateTomorrow', () => {
+		expect(isDateTomorrow).toBeDefined();
+	});
+
+	it('should import with individual import isDateLeapYear', () => {
+		expect(isDateLeapYear).toBeDefined();
+	});
+
+	it('should import with individual import howManyLeapDayInLastYears', () => {
+		expect(howManyLeapDayInLastYears).toBeDefined();
+	});
+
+	it('should import with individual import daysInCurrentYear', () => {
+		expect(daysInCurrentYear).toBeDefined();
+	});
+
+	it('should import with individual import daysSinceStartOfCurrentYear', () => {
+		expect(daysSinceStartOfCurrentYear).toBeDefined();
+	});
+
+	it('should import with individual import guessUserTimezone', () => {
+		expect(guessUserTimezone).toBeDefined();
+	});
+
+	it('should import with individual import changeTimezone', () => {
+		expect(changeTimezone).toBeDefined();
+	});
+
+	it('should import with individual import currentUtcTime', () => {
+		expect(currentUtcTime).toBeDefined();
+	});
+
+	it('should import with individual import isDateUtc', () => {
+		expect(isDateUtc).toBeDefined();
+	});
+
+	it('should import with individual import convertDateToUTC', () => {
+		expect(convertDateToUTC).toBeDefined();
+	});
+
+	it('should import with individual import convertDateToLocalTime', () => {
+		expect(convertDateToLocalTime).toBeDefined();
+	});
+
+	it('should import with individual import convertDateToLocalTime', () => {
+		expect(convertDateToLocalTime).toBeDefined();
 	});
 });
