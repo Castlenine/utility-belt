@@ -39,37 +39,7 @@ npm install @castlenine/utility-belt
 
 ## Usage
 
-You can import the utility belt as a whole or import individual utilities
-
-### Import the whole utility belt
-
-```typescript
-import utilityBelt from '@castlenine/utility-belt';
-```
-
-### Import individual utilities
-
-```typescript
-import { atomicUnit } from '@castlenine/utility-belt';
-
-import { cookie } from '@castlenine/utility-belt';
-
-import { cryptocurrency } from '@castlenine/utility-belt';
-
-import { currency } from '@castlenine/utility-belt';
-
-import { delay } from '@castlenine/utility-belt';
-
-import { email } from '@castlenine/utility-belt';
-
-import { number } from '@castlenine/utility-belt';
-
-import { object } from '@castlenine/utility-belt';
-
-import { string } from '@castlenine/utility-belt';
-
-import { time } from '@castlenine/utility-belt';
-```
+TODO: Add documentation for each utility (scheduled for version 1.0.0)
 
 ## Documentation
 

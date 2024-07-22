@@ -1,6 +1,6 @@
 {
   "name": "@castlenine/utility-belt",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Utility Belt is a versatile and lightweight collection of essential JavaScript utilities designed to streamline and simplify my development workflow",
   "license": "MIT",
   "author": {
@@ -33,12 +33,17 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
-  "import": "dist/index.js",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./modules": {
+      "types": "./dist/modules.d.ts",
+      "import": "./dist/modules.js",
+      "default": "./dist/modules.js"
     }
   },
   "files": [
