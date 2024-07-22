@@ -1,0 +1,24 @@
+arrowParens: always
+bracketSameLine: true
+bracketSpacing: true
+embeddedLanguageFormatting: auto
+endOfLine: lf
+insertPragma: false
+printWidth: 120
+proseWrap: always
+quoteProps: as-needed
+requirePragma: false
+semi: true
+singleAttributePerLine: false
+singleQuote: true
+tabWidth: 2
+trailingComma: all
+useTabs: true
+
+# Formatting the package.json with anything other than spaces will cause issues when running install...
+overrides:
+  - files:
+      - '**/package.json'
+      - '**/*.json'
+    options:
+      useTabs: false
