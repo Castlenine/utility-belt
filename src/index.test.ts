@@ -2,10 +2,10 @@
 import { describe, it, expect } from 'vitest';
 
 // All modules
-import utilityBelt from './index';
+import utilityBelt from './modules';
 
 // Named exports for individual modules
-import { atomicUnit, cookie, cryptocurrency, currency, delay, email, number, object, string, time } from './index';
+import { atomicUnit, cookie, cryptocurrency, currency, delay, email, number, object, string, time } from './modules';
 
 // Named exports for individual functions
 import {
@@ -18,6 +18,7 @@ import {
 	getCurrencySymbol,
 	formatAndAddCurrencySymbol,
 	labelCurrency,
+	delay as delayFunction,
 	isEmailValid,
 	isNumber,
 	stringToBigNumber,
@@ -320,6 +321,11 @@ describe('Named exports for individual functions importing', () => {
 
 	it('should import with individual import isEmailValid', () => {
 		expect(isEmailValid).toBeDefined();
+	});
+
+	it('should import with individual import delay', () => {
+		// Default export
+		expect(delayFunction).toBeDefined();
 	});
 
 	it('should import with individual import isNumber', () => {
