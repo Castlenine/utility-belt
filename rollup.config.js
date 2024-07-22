@@ -16,7 +16,14 @@ const config = [
 				sourcemap: true,
 			},
 		],
-		plugins: [resolve(), commonjs(), typescript({ tsconfig: './tsconfig.json' })],
+		plugins: [
+			resolve(),
+			commonjs(),
+			typescript({
+				tsconfig: './tsconfig.json',
+				exclude: ['**/*.test.*'], // Exclude test files from build
+			}),
+		],
 		external: [...Object.keys(packageJson.dependencies || {}), ...Object.keys(packageJson.peerDependencies || {})],
 	},
 ];
