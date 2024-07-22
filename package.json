@@ -1,0 +1,93 @@
+{
+  "name": "@castlenine/utility-belt",
+  "version": "0.0.1",
+  "description": "Utility Belt is a versatile and lightweight collection of essential JavaScript utilities designed to streamline and simplify my development workflow",
+  "license": "MIT",
+  "author": {
+    "name": "Alexandre Castlenine",
+    "url": "https://github.com/Castlenine"
+  },
+  "homepage": "https://github.com/Castlenine/utility-belt",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Castlenine/utility-belt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Castlenine/utility-belt/issues"
+  },
+  "scripts": {
+    "build": "npm run remove-dist-folder && cross-env NODE_ENV=production rollup -c",
+    "package": "npm run build && publint",
+    "test:vitest": "cross-env IS_TEST=true vitest",
+    "eslint": "eslint --ignore-path ./.eslintignore .",
+    "eslint:fix": "eslint --fix --ignore-path ./.eslintignore .",
+    "prettier": "prettier --ignore-path ./.prettierignore --check .",
+    "prettier:fix": "prettier --ignore-path ./.prettierignore --write .",
+    "clean-code": "npm run prettier:fix && npm run eslint:fix",
+    "remove-dist-folder": "rimraf dist",
+    "update-packages": "npm i && ncu --interactive",
+    "update-packages:minor": "npm i && ncu --target minor --interactive",
+    "prepublishOnly": "npm run package",
+    "publish-package": "npm publish -access public"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "import": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "bignumber.js": "^9.1.2",
+    "dayjs": "^1.11.12"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/cz-commitlint": "^19.2.0",
+    "@commitlint/types": "^19.0.3",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/node": "^20.14.11",
+    "@typescript-eslint/eslint-plugin": "^7.16.1",
+    "@typescript-eslint/parser": "^7.16.1",
+    "@vitest/coverage-istanbul": "^2.0.4",
+    "commitizen": "^4.3.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-no-loops": "^0.3.0",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-security": "^1.7.1",
+    "jsdom": "^24.1.1",
+    "lefthook": "^1.7.5",
+    "lint-staged": "^15.2.7",
+    "mockdate": "^3.0.5",
+    "npm-check-updates": "^16.14.20",
+    "prettier": "^3.3.3",
+    "prettier-eslint": "^16.3.0",
+    "prettier-eslint-cli": "^8.0.1",
+    "publint": "^0.2.9",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.19.0",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
+  }
+}

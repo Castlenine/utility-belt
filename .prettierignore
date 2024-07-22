@@ -1,0 +1,55 @@
+# Node modules
+node_modules
+
+# Output
+.vite
+/dist
+
+# Test results folders (Vitest)
+/test-results-vitest
+
+# Logs
+*.log
+*.logs
+*.log-*
+*.log.*
+*-debug.log
+## Ignore Vite log timestamp files
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Not parseable files
+.eslintignore
+.gitignore
+.npmrc
+.nvmrc
+.prettierignore
+*.md
+
+# tsconfig
+tsconfig.json
+
+# Ignore local backup
+*.backup
+*.backup.*
+*.bak
+*.bak.*
+*.local
+*.local.*
+*.local-backup
+*.local-backup.*
+
+# OS generated files
+# MacOS
+.DS_Store
+# Windows
+Thumbs.db
+
+# Ignore lock files for PNPM, NPM and YARN
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Env files
+.env
+.env.*

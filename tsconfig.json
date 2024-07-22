@@ -1,0 +1,49 @@
+{
+	"compilerOptions": {
+		"strict": true, /* Enable all strict type-checking options */
+		"moduleResolution": "Bundler",
+		"module": "ESNext",
+		"lib": [
+			"ESNext"
+		],
+		"target": "ES2017", /* Given that modern web browsers provide comprehensive support for all es2017 features, opting for es2017 is a prudent decision https://caniuse.com/?search=es2017 */
+		"allowJs": true, /* Allow JavaScript files to be imported */
+		"checkJs": true, /* Enable error reporting in type-checked JavaScript files */
+		"declaration": true, /* Generates corresponding .d.ts files */
+		"declarationMap": true, /* Generates a source map for each corresponding declaration file  */
+		"esModuleInterop": true, /* Enables compatibility with CommonJS modules */
+		"forceConsistentCasingInFileNames": true, /* Enforces a consistent file naming convention */
+		"importsNotUsedAsValues": "remove", /* Removes import statements that are not used */
+		"isolatedModules": true, /* Ensure that each file can be safely transpiled independently */
+		"noImplicitAny": true, /* Raise error on expressions and declarations with an implied 'any' type */
+		"noImplicitThis": true, /* Raise error on 'this' expressions with an implied 'any' type */
+		"noUnusedLocals": true, /* Report errors on unused local variables */
+		"noUnusedParameters": true, /* Report errors on unused parameters in functions */
+		"resolveJsonModule": true, /* Allows importing modules with a .json extension */
+		"skipLibCheck": true, /* Rather than doing a full check of all d.ts files, TypeScript will type check the code you specifically refer to in your app’s source code */
+		"sourceMap": true, /* Generates corresponding .map file */
+		"strictFunctionTypes": true, /* Enable strict checking of function types */
+		"strictNullChecks": true, /* `null` and `undefined` have their own distinct types and you’ll get a type error if you try to use them where a concrete value is expected */
+		"strictPropertyInitialization": true, /* Will raise an error when a class property was declared but not set in the constructor */
+		"verbatimModuleSyntax": true, /* Forces you to use import type and export type */
+		"outDir": "./dist", /* Redirect output structure to the directory */
+	},
+	"include": [
+		"src/**/*.d.ts",
+		"src/**/*.js",
+		"src/**/*.ts",
+	],
+	"exclude": [
+		"*.backup.*",
+		"*.backup",
+		"*.bak.*",
+		"*.bak",
+		"*.local-backup.*",
+		"*.local-backup",
+		"*.local.*",
+		"*.local",
+		"*.cjs",
+		"dist",
+		"node_modules",
+	]
+}
