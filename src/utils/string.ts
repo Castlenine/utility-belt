@@ -10,7 +10,7 @@ import BigNumber from 'bignumber.js';
  *
  * @returns The modified string with the first letter capitalized. If the input is not a string or is an empty string, an empty string is returned.
  */
-const capitalizeFirstLetterOnly = (string: string, isRestBecomeLowercase = true): string => {
+const capitalizeFirstLetterOnly = (string: string | undefined, isRestBecomeLowercase = true): string => {
 	if (typeof string !== 'string') {
 		console.error('capitalizeFirstLetterOnly: invalid string');
 
@@ -35,7 +35,7 @@ const capitalizeFirstLetterOnly = (string: string, isRestBecomeLowercase = true)
  * @returns A new string with the last comma replaced by a dot. If no comma is present in the input string, the original string is returned unchanged.
  * If the input is not a string or is an empty string, an empty string is returned.
  */
-const replaceLastCommaByDot = (string: string, removeTheExtraCommas = true): string => {
+const replaceLastCommaByDot = (string: string | undefined, removeTheExtraCommas = true): string => {
 	if (typeof string !== 'string') {
 		console.error('replaceLastCommaByDot: invalid string');
 
@@ -64,7 +64,7 @@ const replaceLastCommaByDot = (string: string, removeTheExtraCommas = true): str
  *
  * @returns `true` if the string contains a number, otherwise `false`. If the input is not a string or is an empty string, `false` is returned.
  */
-const isStringContainsNumber = (string: string): boolean => {
+const isStringContainsNumber = (string: string | undefined): boolean => {
 	if (typeof string !== 'string') {
 		console.error('isStringContainsNumber: invalid string');
 
@@ -86,7 +86,7 @@ const isStringContainsNumber = (string: string): boolean => {
  *
  * @returns A new string containing only numeric characters. If the input is not a string or is an empty string, an empty string is returned.
  */
-const removeNonNumericCharactersFromString = (string: string, haveReplaceLastCommaByDot = true): string => {
+const removeNonNumericCharactersFromString = (string: string | undefined, haveReplaceLastCommaByDot = true): string => {
 	if (typeof string !== 'string') {
 		console.error('removeNonNumericCharactersFromString: invalid string');
 
@@ -113,7 +113,7 @@ const removeNonNumericCharactersFromString = (string: string, haveReplaceLastCom
  *
  * @returns A new string with all numeric characters removed. If the input is not a string or is an empty string, an empty string is returned.
  */
-const removeNumbersFromString = (string: string): string => {
+const removeNumbersFromString = (string: string | undefined): string => {
 	if (typeof string !== 'string') {
 		console.error('removeNumbersFromString: invalid string');
 
@@ -170,7 +170,7 @@ const numberToString = (number: number | BigNumber | undefined): string => {
  * normalizeString('A ticket to 大阪 costs ¥2000 👌.'); // 'Atickettocosts'
  */
 const normalizeString = (
-	string: string,
+	string: string | undefined,
 	spaceReplacementType: 'remove' | 'underscore' | 'dash' | '' = 'remove',
 	haveRemoveDiacritic = true,
 	haveRemoveEmoji = true,
@@ -249,7 +249,7 @@ const normalizeString = (
  *
  * @returns A slugified version of the input string. If the input is not a string or is an empty string, an empty string is returned.
  */
-const slugifyString = (string: string, isBecomeLowercase = true): string => {
+const slugifyString = (string: string | undefined, isBecomeLowercase = true): string => {
 	if (typeof string !== 'string') {
 		console.error('slugifyString: invalid string');
 
