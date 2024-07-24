@@ -4,27 +4,47 @@ import BigNumber from 'bignumber.js';
 
 import { absoluteToBigNumber, roundUpNumberToBigNumber, truncateNumberToBigNumber, formatNumber } from './number';
 
-import { replaceLastCommaByDot } from './string';
+import { capitalizeFirstLetterOnly, replaceLastCommaByDot } from './string';
 
 // Useful link: https://www.xe.com/symbols.php
 
 const CRYPTOCURRENCIES_SYMBOLS: Readonly<Record<string, string>> = {
-	BTC: '₿',
-	SAT: '丰',
-	ADA: '₳',
-	DOGE: 'Ð',
-	ETH: 'Ξ',
-	LTC: 'Ł',
-	XTZ: 'ꜩ',
-	USDT: '₮',
-	TBTC: 't₿',
-	TSAT: 't丰',
-	TADA: 't₳',
-	TDOGE: 'tÐ',
-	TETH: 'tΞ',
-	TLTC: 'tŁ',
-	TXTZ: 'tꜩ',
-	TUSDT: 't₮',
+	BTC: '₿', // Bitcoin
+	SAT: '丰', // Satoshi
+	ADA: '₳', // Cardano
+	DOGE: 'Ð', // Dogecoin
+	ETH: 'Ξ', // Ethereum
+	LTC: 'Ł', // Litecoin
+	XTZ: 'ꜩ', // Tezos
+	USDT: '₮', // Tether
+	TBTC: 't₿', // Testnet Bitcoin
+	TSAT: 't丰', // Testnet Satoshi
+	TADA: 't₳', // Testnet Cardano
+	TDOGE: 'tÐ', // Testnet Dogecoin
+	TETH: 'tΞ', // Testnet Ethereum
+	TLTC: 'tŁ', // Testnet Litecoin
+	TXTZ: 'tꜩ', // Testnet Tezos
+	TUSDT: 't₮', // Testnet Tether
+};
+
+/**
+ * Checks if a given currency code exists in Intl.DisplayNames.
+ *
+ * @param currency - The currency code to check.
+ * @param lang - The language code for localization.
+ *
+ * @returns True if the currency exists, false otherwise.
+ */
+const currencyExistsInIntl = (currency: string, lang: string = 'en'): boolean => {
+	try {
+		const UPPERCASE_CURRENCY = currency.toUpperCase().trim() as Currency;
+
+		const DISPLAY_NAME = new Intl.DisplayNames([lang], { type: 'currency' }).of(UPPERCASE_CURRENCY);
+
+		return DISPLAY_NAME !== UPPERCASE_CURRENCY; // If the result is the same as the input, it's not a valid currency
+	} catch (_error) {
+		return false;
+	}
 };
 
 /*
@@ -42,7 +62,8 @@ const CRYPTOCURRENCIES_SYMBOLS: Readonly<Record<string, string>> = {
  * @returns The full name of the currency in the specified language, or the currency code if it's not recognized.
  *
  * @remarks
- * The function supports the following fiat currencies: EUR, GBP, USD, CAD and Gold and Silver
+ * The function supports the fiat currency with Intl.NumberFormat, so it should work with any currency supported by the browser.
+ * The function supports gold and silver commodities.
  * The function supports the following cryptocurrencies: BTC, SAT, ADA, ALGO, ARB, ATOM, AVAX, BNB, DOGE, DOT, ETH, FTM, LTC, MATIC, NEAR, OP, SOL, TRX, VET, XLM, XRP, XTZ, USDC, USDT
  * The function also supports testnet versions of TBTC, TSAT, TADA, TALGO, TARB, TATOM, TAVAX, TBNB, TDOGE, TDOT, TETH, TFTM, TLTC, TMATIC, TNEAR, TOP, TSOL, TTRX, TVET, TXLM, TXRP, TXTZ, TUSDC, TUSDT
  */
@@ -50,33 +71,20 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
 	const UPPERCASE_CURRENCY = currency.toUpperCase().trim() as Currency;
 	const LOWERCASE_LANG = lang.toLowerCase();
 
-	const PLURAL_SUFFIX = plural ? 's' : '';
-
-	// Add new currencies here
 	switch (UPPERCASE_CURRENCY) {
 		case 'BTC':
-			return `Bitcoin${PLURAL_SUFFIX}`; // There is no second best, Buy bitcoin
+			return `Bitcoin${plural ? 's' : ''}`; // There is no second best, Buy bitcoin
 
 		case 'SAT':
-			return `Satoshi${PLURAL_SUFFIX}`;
-
-		case 'EUR':
-			return `Euro${PLURAL_SUFFIX}`;
-
-		case 'GBP':
-			return LOWERCASE_LANG === 'fr' ? `Livre${PLURAL_SUFFIX} sterling` : `British Pound${PLURAL_SUFFIX} Sterling`;
-
-		case 'USD':
-			return LOWERCASE_LANG === 'fr' ? `Dollar${PLURAL_SUFFIX} américain` : `US Dollar${PLURAL_SUFFIX}`;
-
-		case 'CAD':
-			return LOWERCASE_LANG === 'fr' ? `Dollar${PLURAL_SUFFIX} canadien` : `Canadian Dollar${PLURAL_SUFFIX}`;
+			return `Satoshi${plural ? 's' : ''}`;
 
 		case 'XAU':
-			return LOWERCASE_LANG === 'fr' ? `Once${PLURAL_SUFFIX} troy d'or` : `Gold Troy Ounce${PLURAL_SUFFIX}`;
+			return LOWERCASE_LANG === 'fr' ? `Once${plural ? 's' : ''} troy d'or` : `Gold Troy Ounce${plural ? 's' : ''}`;
 
 		case 'XAG':
-			return LOWERCASE_LANG === 'fr' ? `Once${PLURAL_SUFFIX} troy d'argent` : `Silver Troy Ounce${PLURAL_SUFFIX}`;
+			return LOWERCASE_LANG === 'fr'
+				? `Once${plural ? 's' : ''} troy d'argent`
+				: `Silver Troy Ounce${plural ? 's' : ''}`;
 
 		case 'ADA':
 			return 'Cardano';
@@ -94,10 +102,10 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
 			return 'Avalanche';
 
 		case 'BNB':
-			return `Binance Coin${PLURAL_SUFFIX}`;
+			return `Binance Coin${plural ? 's' : ''}`;
 
 		case 'DOGE':
-			return `Dogecoin${PLURAL_SUFFIX}`;
+			return `Dogecoin${plural ? 's' : ''}`;
 
 		case 'DOT':
 			return 'Polkadot';
@@ -109,7 +117,7 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
 			return 'Fantom';
 
 		case 'LTC':
-			return `Litecoin${PLURAL_SUFFIX}`;
+			return `Litecoin${plural ? 's' : ''}`;
 
 		case 'MATIC':
 			return 'Polygon';
@@ -139,16 +147,16 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
 			return 'Tezos';
 
 		case 'USDC':
-			return `USD Coin${PLURAL_SUFFIX}`;
+			return `USD Coin${plural ? 's' : ''}`;
 
 		case 'USDT':
-			return `Tether${PLURAL_SUFFIX}`;
+			return `Tether${plural ? 's' : ''}`;
 
 		case 'TBTC':
-			return `Testnet Bitcoin${PLURAL_SUFFIX}`;
+			return `Testnet Bitcoin${plural ? 's' : ''}`;
 
 		case 'TSAT':
-			return `Testnet Satoshi${PLURAL_SUFFIX}`;
+			return `Testnet Satoshi${plural ? 's' : ''}`;
 
 		case 'TADA':
 			return 'Testnet Cardano';
@@ -166,10 +174,10 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
 			return 'Testnet Avalanche';
 
 		case 'TBNB':
-			return `Testnet Binance Coin${PLURAL_SUFFIX}`;
+			return `Testnet Binance Coin${plural ? 's' : ''}`;
 
 		case 'TDOGE':
-			return `Testnet Dogecoin${PLURAL_SUFFIX}`;
+			return `Testnet Dogecoin${plural ? 's' : ''}`;
 
 		case 'TDOT':
 			return 'Testnet Polkadot';
@@ -181,7 +189,7 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
 			return 'Testnet Fantom';
 
 		case 'TLTC':
-			return `Testnet Litecoin${PLURAL_SUFFIX}`;
+			return `Testnet Litecoin${plural ? 's' : ''}`;
 
 		case 'TMATIC':
 			return 'Testnet Polygon';
@@ -211,13 +219,33 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
 			return 'Testnet Tezos';
 
 		case 'TUSDC':
-			return `Testnet USD Coin${PLURAL_SUFFIX}`;
+			return `Testnet USD Coin${plural ? 's' : ''}`;
 
 		case 'TUSDT':
-			return `Testnet Tether${PLURAL_SUFFIX}`;
+			return `Testnet Tether${plural ? 's' : ''}`;
 
 		default:
-			return UPPERCASE_CURRENCY;
+			try {
+				if (plural) {
+					const DISPLAY_NAME = new Intl.NumberFormat(LOWERCASE_LANG, {
+						style: 'currency',
+						currency: UPPERCASE_CURRENCY,
+						currencyDisplay: 'name',
+					});
+
+					const PLURAL_NAME = DISPLAY_NAME.formatToParts(2).find((part) => part.type === 'currency')?.value;
+
+					return currencyExistsInIntl(currency) ? capitalizeFirstLetterOnly(PLURAL_NAME, false) : UPPERCASE_CURRENCY;
+				} else {
+					const SINGULAR_NAME = new Intl.DisplayNames([LOWERCASE_LANG], { type: 'currency' }).of(UPPERCASE_CURRENCY);
+
+					return currencyExistsInIntl(currency) ? capitalizeFirstLetterOnly(SINGULAR_NAME, false) : UPPERCASE_CURRENCY;
+				}
+			} catch (error) {
+				console.error('getCurrencyFullName unsuccessful:', error);
+
+				return UPPERCASE_CURRENCY;
+			}
 	}
 };
 
@@ -228,21 +256,44 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
  *
  * @param currency - The currency code (e.g.: 'USD', 'EUR', 'BTC'). The function converts the code to uppercase so it's case-insensitive.
  * It's recommended to use uppercase currency codes for consistency.
+ * @param isNarrowSymbol - Optional. If true, returns the narrow symbol of the currency. Defaults to false. Example: '$' instead of 'US$'.
+ * @param format - Optional. The locale format to use for the number. Defaults to 'fr-FR'.
  *
  * @returns The symbol of the currency if recognized, otherwise returns the original currency code.
  *
  * @remarks
- * The function supports the following fiat currencies: EUR, GBP, USD and CAD
+ * The function supports the fiat currency with Intl.NumberFormat, so it should work with any currency supported by the browser.
  * The function supports the following cryptocurrencies: BTC, SAT, ADA, DOGE, ETH, LTC, XTZ, USDT
  * The function also supports testnet versions of TBTC, TSAT, TADA, TDOGE, TETH, TLTC, TXTZ, TUSDT
  */
-const getCurrencySymbol = (currency: Currency): string => {
+const getCurrencySymbol = (currency: Currency, isNarrowSymbol = false, localeFormat = 'fr-FR'): string => {
 	const UPPERCASE_CURRENCY = currency.toUpperCase().trim() as Currency;
 
-	return UPPERCASE_CURRENCY in CRYPTOCURRENCIES_SYMBOLS
-		? // eslint-disable-next-line security/detect-object-injection
-		CRYPTOCURRENCIES_SYMBOLS[UPPERCASE_CURRENCY]
-		: UPPERCASE_CURRENCY;
+	try {
+		// eslint-disable-next-line security/detect-object-injection
+		const CURRENT_CRYPTOCURRENCY_SYMBOL = CRYPTOCURRENCIES_SYMBOLS[UPPERCASE_CURRENCY] || '';
+
+		if (CURRENT_CRYPTOCURRENCY_SYMBOL !== '') {
+			return CURRENT_CRYPTOCURRENCY_SYMBOL;
+		} else {
+			const FIAT_SYMBOL = new Intl.NumberFormat(localeFormat, {
+				style: 'currency',
+				currency: UPPERCASE_CURRENCY,
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 0,
+				currencyDisplay: isNarrowSymbol ? 'narrowSymbol' : 'symbol',
+			})
+				.format(0)
+				.replace(/\d/g, '')
+				.trim();
+
+			return FIAT_SYMBOL || UPPERCASE_CURRENCY;
+		}
+	} catch (error) {
+		console.error('getCurrencySymbol unsuccessful:', error);
+
+		return UPPERCASE_CURRENCY;
+	}
 };
 
 /*
@@ -255,10 +306,10 @@ const getCurrencySymbol = (currency: Currency): string => {
  * @param isRounded - If true, rounds the number to the specified number of decimals. Defaults to false.
  * @param maximumDecimal - The maximum number of decimal places to display. Should be greater than or equal to minimumDecimal. Defaults to 2.
  * @param minimumDecimal - The minimum number of decimal places to display. Should be less than or equal to maximumDecimal. Defaults to 2.
- * @param haveShortSymbol - If true, uses short currency symbols (e.g.: '$'). If false, uses long symbols (e.g.: 'USD'). Defaults to true.
- * @param useIsoCurrencyCode - If true, uses ISO currency codes (e.g.: 'EUR') instead of symbols. Defaults to false.
+ * @param currencyDisplay - The currency display mode. Can be 'code' (ISO currency code, e.g.: 'USD'), 'narrowSymbol' (e.g.: '$') or 'symbol' (e.g.: 'US$'). Defaults to 'code'.
+ * @param format - The locale format to use for the number. Defaults to 'fr-FR'.
  *
- * @returns The formatted amount with the currency symbol or ISO currency code.
+ * @returns The formatted amount with the desired currency display.
  */
 const formatAndAddCurrencySymbol = (
 	amount: string | number | BigNumber | undefined,
@@ -266,8 +317,8 @@ const formatAndAddCurrencySymbol = (
 	isRounded = false,
 	maximumDecimal = 2,
 	minimumDecimal = 2,
-	useIsoCurrencyCode = true,
-	haveShortSymbol = false,
+	currencyDisplay: 'code' | 'narrowSymbol' | 'symbol' = 'code',
+	localeFormat = 'fr-FR',
 ): string => {
 	try {
 		if (amount == null || (typeof amount === 'string' && !amount.trim()) || BigNumber(amount).isNaN()) {
@@ -306,7 +357,7 @@ const formatAndAddCurrencySymbol = (
 			? roundUpNumberToBigNumber(BIG_NUMBER, maximumDecimal)
 			: truncateNumberToBigNumber(BIG_NUMBER, maximumDecimal);
 
-		if (formattedNumber.toFixed() === '-0') {
+		if (formattedNumber.isEqualTo(0) || formattedNumber.isEqualTo(-0)) {
 			formattedNumber = BigNumber(0);
 		}
 
@@ -314,7 +365,8 @@ const formatAndAddCurrencySymbol = (
 		const UPPERCASE_CURRENCY = currency.toUpperCase().trim() as Currency;
 
 		const CURRENT_CRYPTOCURRENCY_SYMBOL =
-			haveShortSymbol && UPPERCASE_CURRENCY in CRYPTOCURRENCIES_SYMBOLS
+			(currencyDisplay === 'narrowSymbol' || currencyDisplay === 'symbol') &&
+			UPPERCASE_CURRENCY in CRYPTOCURRENCIES_SYMBOLS
 				? // eslint-disable-next-line security/detect-object-injection
 				CRYPTOCURRENCIES_SYMBOLS[UPPERCASE_CURRENCY]
 				: '';
@@ -323,12 +375,13 @@ const formatAndAddCurrencySymbol = (
 		const SHORTED_CURRENCY = UPPERCASE_CURRENCY.substring(UPPERCASE_CURRENCY.length - 3) as Currency;
 
 		// We replace the decimal comma by a dot, because it's scientifically superior ;)
-		let formattedAmountString = new Intl.NumberFormat('fr-FR', {
+		let formattedAmountString = new Intl.NumberFormat(localeFormat, {
 			style: 'currency',
 			currency: SHORTED_CURRENCY,
 			minimumFractionDigits: minimumDecimal,
 			maximumFractionDigits: maximumDecimal,
-			currencyDisplay: useIsoCurrencyCode ? 'code' : haveShortSymbol ? 'narrowSymbol' : 'symbol',
+			currencyDisplay:
+				currencyDisplay === 'symbol' ? 'symbol' : currencyDisplay === 'narrowSymbol' ? 'narrowSymbol' : 'code',
 		}).format(formattedNumber.toNumber());
 
 		if (CURRENT_CRYPTOCURRENCY_SYMBOL !== '') {
@@ -338,7 +391,7 @@ const formatAndAddCurrencySymbol = (
 			formattedAmountString = formattedAmountString.replace(SHORTED_CURRENCY, UPPERCASE_CURRENCY);
 		}
 
-		return replaceLastCommaByDot(formattedAmountString);
+		return localeFormat.includes('fr') ? replaceLastCommaByDot(formattedAmountString) : formattedAmountString;
 	} catch (error) {
 		console.error('formatAndAddCurrencySymbol unsuccessful. Fallback to just amount:', error);
 
@@ -353,9 +406,9 @@ const formatAndAddCurrencySymbol = (
  * @param lang - The language to be used for formatting the time. Defaults to 'en' (English).
  * @param currency - The currency code (e.g.: 'USD', 'EUR', 'BTC'). Defaults to 'EUR'. The function converts the code to uppercase so it's case-insensitive.
  * It's recommended to use uppercase currency codes for consistency.
+ * @param currencyDisplay - The currency display mode. Can be 'code' (ISO currency code, e.g.: 'USD'), 'narrowSymbol' (e.g.: '$'), 'symbol' (e.g.: 'US$'),
+ * `name` for the full currency name or `none` to not show the currency string. Defaults to 'code'.
  * @param shortLabel - Whether to use short labels (e.g.: 'M' for million, 'B' for billion, 'T' for trillion). Default is false.
- * @param haveCurrencyText - If true, adds the currency symbol or ISO currency code to the labeled amount. Defaults to true.
- * @param haveShortCurrencySymbol - If true, uses short currency symbols (e.g.: '$'). If false, uses long text (e.g.: 'Euro'). Need haveCurrencyText to be true to works. Defaults to true.
  * @param isRounded - If true, rounds the amount to the specified number of decimals. Defaults to false.
  * @param maximumDecimal - The maximum number of decimal places to display. Should be greater than or equal to minimumDecimal. Defaults to 2.
  * @param minimumDecimal - The minimum number of decimal places to display. Should be less than or equal to maximumDecimal. Defaults to 2.
@@ -369,9 +422,8 @@ const labelCurrency = (
 	amount: string | number | BigNumber | undefined,
 	lang: Locales = 'en',
 	currency: Currency = 'EUR',
+	currencyDisplay: 'code' | 'narrowSymbol' | 'symbol' | 'name' | 'none' = 'code',
 	shortLabel = false,
-	haveCurrencyText = true,
-	haveShortCurrencySymbol = true,
 	isRounded = false,
 	maximumDecimal = 2,
 	minimumDecimal = 2,
@@ -383,18 +435,13 @@ const labelCurrency = (
 			return `${String(amount)}`;
 		}
 
-		if (!Number.isInteger(maximumDecimal) || maximumDecimal < 0) {
-			console.error(
-				`labelCurrency: invalid maximumDecimal parameter ${maximumDecimal}. Must be a non-negative integer`,
-			);
-
-			return `${String(amount)}`;
-		}
-
-		if (!Number.isInteger(minimumDecimal) || minimumDecimal < 0) {
-			console.error(
-				`labelCurrency: invalid minimumDecimal parameter ${minimumDecimal}. Must be a non-negative integer`,
-			);
+		if (
+			!Number.isInteger(maximumDecimal) ||
+			maximumDecimal < 0 ||
+			!Number.isInteger(minimumDecimal) ||
+			minimumDecimal < 0
+		) {
+			console.error(`labelCurrency: invalid decimal parameters. Must be non-negative integers.`);
 
 			return `${String(amount)}`;
 		}
@@ -416,43 +463,53 @@ const labelCurrency = (
 			fr: { trillion: 'Trillion', billion: 'Milliard', million: 'Million' },
 		};
 
-		currency = currency.toUpperCase().trim() as Currency;
+		const UPPERCASE_CURRENCY = currency.toUpperCase().trim() as Currency;
+		const LOWERCASE_LANG = lang.toLowerCase() as Locales;
 
-		const CURRENCY_TEXT = haveCurrencyText
-			? haveShortCurrencySymbol
-				? ` ${getCurrencySymbol(currency)}`
-				: ` ${lang.toLowerCase() === 'fr' && currency === 'EUR' ? "d'" : lang.toLowerCase() === 'fr' && currency !== 'EUR' ? 'de ' : ''}${getCurrencyFullName(currency, lang, true)}`
-			: '';
+		const getCurrencyText = (): string => {
+			if (currencyDisplay === 'name') {
+				const PREFIX = LOWERCASE_LANG === 'fr' ? (UPPERCASE_CURRENCY === 'EUR' ? "d'" : 'de ') : '';
 
-		// eslint-disable-next-line security/detect-object-injection
-		const LANG_STRINGS = shortLabel ? SHORT_LABELS[lang] || SHORT_LABELS['en'] : LABELS[lang] || LABELS['en'];
+				return ` ${PREFIX}${getCurrencyFullName(UPPERCASE_CURRENCY, LOWERCASE_LANG, BigNumber(amount).toNumber() > 1)}`;
+			}
+
+			if (currencyDisplay === 'narrowSymbol' || currencyDisplay === 'symbol') {
+				return ` ${getCurrencySymbol(UPPERCASE_CURRENCY, currencyDisplay === 'narrowSymbol')}`;
+			}
+
+			if (currencyDisplay === 'code') {
+				return ` ${UPPERCASE_CURRENCY}`;
+			}
+
+			return '';
+		};
+
+		const CURRENCY_TEXT = getCurrencyText();
+
+		const LANG_STRINGS = shortLabel
+			? // eslint-disable-next-line security/detect-object-injection
+			SHORT_LABELS[LOWERCASE_LANG] || SHORT_LABELS['en']
+			: // eslint-disable-next-line security/detect-object-injection
+			LABELS[LOWERCASE_LANG] || LABELS['en'];
 
 		const ABSOLUTE_NUMBER = absoluteToBigNumber(amount);
 		const NUMBER = BigNumber(amount);
 
+		const formatLabeledValue = (value: BigNumber, label: string): string => {
+			const FORMAT_VALUE = formatNumber(value, isRounded, maximumDecimal, minimumDecimal);
+			const PLURAL_SUFFIX = !shortLabel && LOWERCASE_LANG === 'fr' && value.isGreaterThanOrEqualTo(2) ? 's' : '';
+
+			return `${FORMAT_VALUE} ${label}${PLURAL_SUFFIX}${CURRENCY_TEXT}`;
+		};
+
 		if (ABSOLUTE_NUMBER.isGreaterThanOrEqualTo(1e12)) {
-			const VALUE = NUMBER.dividedBy(1e12);
-
-			return `${formatNumber(VALUE, isRounded, maximumDecimal, minimumDecimal)} ${LANG_STRINGS.trillion}${!shortLabel && lang.toLowerCase() === 'fr' && VALUE.isGreaterThanOrEqualTo(2) ? 's' : ''}${CURRENCY_TEXT}`;
+			return formatLabeledValue(NUMBER.dividedBy(1e12), LANG_STRINGS.trillion);
 		} else if (ABSOLUTE_NUMBER.isGreaterThanOrEqualTo(1e9)) {
-			const VALUE = NUMBER.dividedBy(1e9);
-
-			return `${formatNumber(VALUE, isRounded, maximumDecimal, minimumDecimal)} ${LANG_STRINGS.billion}${!shortLabel && lang.toLowerCase() === 'fr' && VALUE.isGreaterThanOrEqualTo(2) ? 's' : ''}${CURRENCY_TEXT}`;
+			return formatLabeledValue(NUMBER.dividedBy(1e9), LANG_STRINGS.billion);
 		} else if (ABSOLUTE_NUMBER.isGreaterThanOrEqualTo(1e6)) {
-			const VALUE = NUMBER.dividedBy(1e6);
-
-			return `${formatNumber(VALUE, isRounded, maximumDecimal, minimumDecimal)} ${LANG_STRINGS.million}${!shortLabel && lang.toLowerCase() === 'fr' && VALUE.isGreaterThanOrEqualTo(2) ? 's' : ''}${CURRENCY_TEXT}`;
+			return formatLabeledValue(NUMBER.dividedBy(1e6), LANG_STRINGS.million);
 		} else {
-			return haveCurrencyText
-				? formatAndAddCurrencySymbol(
-					amount,
-					currency,
-					isRounded,
-					maximumDecimal,
-					minimumDecimal,
-					haveShortCurrencySymbol,
-				)
-				: formatNumber(amount, isRounded, maximumDecimal, minimumDecimal);
+			return `${formatNumber(amount, isRounded, maximumDecimal, minimumDecimal)}${CURRENCY_TEXT}`;
 		}
 	} catch (error) {
 		console.error('labelCurrency unsuccessful:', error);
@@ -461,4 +518,4 @@ const labelCurrency = (
 	}
 };
 
-export { getCurrencyFullName, getCurrencySymbol, formatAndAddCurrencySymbol, labelCurrency };
+export { currencyExistsInIntl, getCurrencyFullName, getCurrencySymbol, formatAndAddCurrencySymbol, labelCurrency };

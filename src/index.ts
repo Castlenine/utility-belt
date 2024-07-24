@@ -5,7 +5,13 @@ export { parseValueFromCookie } from './utils/cookie';
 
 export { cryptoMinusShiftedToBigNumberType, cryptoShiftedToBigNumberType } from './utils/cryptocurrency';
 
-export { getCurrencyFullName, getCurrencySymbol, formatAndAddCurrencySymbol, labelCurrency } from './utils/currency';
+export {
+	currencyExistsInIntl,
+	getCurrencyFullName,
+	getCurrencySymbol,
+	formatAndAddCurrencySymbol,
+	labelCurrency,
+} from './utils/currency';
 
 export { default as delay } from './utils/delay';
 

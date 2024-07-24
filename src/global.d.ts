@@ -27,7 +27,7 @@ type NonEmptyString = string & { trim: never };
 type Currency =
 	// Fiats
 	| 'AED' // United Arab Emirates Dirham
-	| 'ARS' // Argentine Peso
+	| 'ARS' // Argentina Peso
 	| 'AUD' // Australian Dollar
 	| 'AWG' // Aruban Florin
 	| 'BAM' // Bosnia-Herzegovina Convertible Mark
