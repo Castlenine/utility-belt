@@ -222,6 +222,7 @@ const roundDownNumberToBigNumber = (number: number | string | BigNumber | undefi
  * @param isRounded - Whether to round the number (default is false).
  * @param maximumDecimal - The maximum number of decimals to display. Must be a non-negative integer. Default is 2.
  * @param minimumDecimal - The minimum number of decimals to display. Must be a non-negative integer. Default is 2.
+ * @param format - The locale to be used for formatting the number. Default is 'fr-FR'.
  *
  * @returns The formatted number as a string.
  */
@@ -230,6 +231,7 @@ const formatNumber = (
 	isRounded = false,
 	maximumDecimal = 2,
 	minimumDecimal = 2,
+	localeFormat = 'fr-FR',
 ): string => {
 	if (number == null || (typeof number === 'string' && !number.trim()) || BigNumber(number).isNaN()) {
 		console.error('formatNumber: invalid number or string representation of number');
@@ -263,17 +265,17 @@ const formatNumber = (
 		? roundNumberToBigNumber(BIG_NUMBER, maximumDecimal)
 		: truncateNumberToBigNumber(BIG_NUMBER, maximumDecimal);
 
-	if (formattedNumber.toFixed() === '-0') {
+	if (formattedNumber.isEqualTo(0) || formattedNumber.isEqualTo(-0)) {
 		formattedNumber = BigNumber(0);
 	}
 
 	// We replace the decimal comma by a dot, because it's scientifically superior ;)
-	const FORMATTED_STRING = new Intl.NumberFormat('fr-FR', {
+	const FORMATTED_STRING = new Intl.NumberFormat(localeFormat, {
 		minimumFractionDigits: minimumDecimal,
 		maximumFractionDigits: maximumDecimal,
 	}).format(formattedNumber.toNumber());
 
-	return replaceLastCommaByDot(FORMATTED_STRING);
+	return localeFormat.includes('fr') ? replaceLastCommaByDot(FORMATTED_STRING) : FORMATTED_STRING;
 };
 
 /*
