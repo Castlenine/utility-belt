@@ -9,6 +9,7 @@ import * as number from './utils/number';
 import * as object from './utils/object';
 import * as string from './utils/string';
 import * as time from './utils/time';
+import * as uuid from './utils/uuid';
 
 // Create the utilityBelt object
 const utilityBelt = {
@@ -22,10 +23,11 @@ const utilityBelt = {
 	...object,
 	...string,
 	...time,
+	...uuid,
 };
 
 // Default export
 export default utilityBelt;
 
 // Named exports for individual modules
-export { atomicUnit, cookie, cryptocurrency, currency, delay, email, number, object, string, time };
+export { atomicUnit, cookie, cryptocurrency, currency, delay, email, number, object, string, time, uuid };
