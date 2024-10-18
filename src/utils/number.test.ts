@@ -245,15 +245,19 @@ describe('Number Manipulation Utility Functions', () => {
 
 	describe('formatNumber', () => {
 		it('should format number correctly', () => {
-			expect(formatNumber(1234567.89)).toBe('1\u202f234\u202f567.89');
+			expect(formatNumber(1234567.89)).toBe('1,234,567.89');
 		});
 
 		it('should handle rounding', () => {
-			expect(formatNumber(1234567.89, true, 1)).toBe('1\u202f234\u202f567.9');
+			expect(formatNumber(1234567.89, true, 1)).toBe('1,234,567.9');
 		});
 
 		it('should handle minimum and maximum decimals', () => {
-			expect(formatNumber(1234.5123, false, 3, 1)).toBe('1\u202f234.512');
+			expect(formatNumber(1234.5123, false, 3, 1)).toBe('1,234.512');
+		});
+
+		it('should format number correctly in France format', () => {
+			expect(formatNumber(1234567.89, false, 2, 0, 'fr-FR')).toBe('1\u202f234\u202f567,89');
 		});
 
 		it('should return string representation for invalid input', () => {

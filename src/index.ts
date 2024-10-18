@@ -66,3 +66,5 @@ export {
 	convertDateToUTC,
 	convertDateToLocalTime,
 } from './utils/time';
+
+export { generateUUID, generateCryptoRandomUUID } from './utils/uuid';

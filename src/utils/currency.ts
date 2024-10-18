@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 
 import { absoluteToBigNumber, roundUpNumberToBigNumber, truncateNumberToBigNumber, formatNumber } from './number';
 
-import { capitalizeFirstLetterOnly, replaceLastCommaByDot } from './string';
+import { capitalizeFirstLetterOnly } from './string';
 
 // Useful link: https://www.xe.com/symbols.php
 
@@ -235,11 +235,15 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
 
 					const PLURAL_NAME = DISPLAY_NAME.formatToParts(2).find((part) => part.type === 'currency')?.value;
 
-					return currencyExistsInIntl(currency) ? capitalizeFirstLetterOnly(PLURAL_NAME, false) : UPPERCASE_CURRENCY;
+					return currencyExistsInIntl(UPPERCASE_CURRENCY)
+						? capitalizeFirstLetterOnly(PLURAL_NAME, false)
+						: UPPERCASE_CURRENCY;
 				} else {
 					const SINGULAR_NAME = new Intl.DisplayNames([LOWERCASE_LANG], { type: 'currency' }).of(UPPERCASE_CURRENCY);
 
-					return currencyExistsInIntl(currency) ? capitalizeFirstLetterOnly(SINGULAR_NAME, false) : UPPERCASE_CURRENCY;
+					return currencyExistsInIntl(UPPERCASE_CURRENCY)
+						? capitalizeFirstLetterOnly(SINGULAR_NAME, false)
+						: UPPERCASE_CURRENCY;
 				}
 			} catch (error) {
 				console.error('getCurrencyFullName unsuccessful:', error);
@@ -257,7 +261,7 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
  * @param currency - The currency code (e.g.: 'USD', 'EUR', 'BTC'). The function converts the code to uppercase so it's case-insensitive.
  * It's recommended to use uppercase currency codes for consistency.
  * @param isNarrowSymbol - Optional. If true, returns the narrow symbol of the currency. Defaults to false. Example: '$' instead of 'US$'.
- * @param format - Optional. The locale format to use for the number. Defaults to 'fr-FR'.
+ * @param format - Optional. The locale format to use for the number. Defaults to 'en-US'.
  *
  * @returns The symbol of the currency if recognized, otherwise returns the original currency code.
  *
@@ -266,7 +270,7 @@ const getCurrencyFullName = (currency: Currency, lang: Locales = 'en', plural = 
  * The function supports the following cryptocurrencies: BTC, SAT, ADA, DOGE, ETH, LTC, XTZ, USDT
  * The function also supports testnet versions of TBTC, TSAT, TADA, TDOGE, TETH, TLTC, TXTZ, TUSDT
  */
-const getCurrencySymbol = (currency: Currency, isNarrowSymbol = false, localeFormat = 'fr-FR'): string => {
+const getCurrencySymbol = (currency: Currency, isNarrowSymbol = false, localeFormat = 'en-US'): string => {
 	const UPPERCASE_CURRENCY = currency.toUpperCase().trim() as Currency;
 
 	try {
@@ -307,7 +311,8 @@ const getCurrencySymbol = (currency: Currency, isNarrowSymbol = false, localeFor
  * @param maximumDecimal - The maximum number of decimal places to display. Should be greater than or equal to minimumDecimal. Defaults to 2.
  * @param minimumDecimal - The minimum number of decimal places to display. Should be less than or equal to maximumDecimal. Defaults to 2.
  * @param currencyDisplay - The currency display mode. Can be 'code' (ISO currency code, e.g.: 'USD'), 'narrowSymbol' (e.g.: '$') or 'symbol' (e.g.: 'US$'). Defaults to 'code'.
- * @param format - The locale format to use for the number. Defaults to 'fr-FR'.
+ * @param minusInFrontOfNumber - If true, adds a minus sign in front of the number if the amount is negative. Defaults to true.
+ * @param localeFormat - The locale format to use for the number. Defaults to 'en-US'.
  *
  * @returns The formatted amount with the desired currency display.
  */
@@ -318,7 +323,8 @@ const formatAndAddCurrencySymbol = (
 	maximumDecimal = 2,
 	minimumDecimal = 2,
 	currencyDisplay: 'code' | 'narrowSymbol' | 'symbol' = 'code',
-	localeFormat = 'fr-FR',
+	minusInFrontOfNumber = true,
+	localeFormat = 'en-US',
 ): string => {
 	try {
 		if (amount == null || (typeof amount === 'string' && !amount.trim()) || BigNumber(amount).isNaN()) {
@@ -391,7 +397,27 @@ const formatAndAddCurrencySymbol = (
 			formattedAmountString = formattedAmountString.replace(SHORTED_CURRENCY, UPPERCASE_CURRENCY);
 		}
 
-		return localeFormat.includes('fr') ? replaceLastCommaByDot(formattedAmountString) : formattedAmountString;
+		// Mostly useful when using the code format
+		if (
+			minusInFrontOfNumber &&
+			BIG_NUMBER.isNegative() &&
+			!formattedNumber.isEqualTo(0) &&
+			!formattedNumber.isEqualTo(-0)
+		) {
+			// Move the minus sign to the front of the number
+			formattedAmountString = formattedAmountString.replace('-', '');
+
+			// Find the first number in the string
+			const FIRST_NUMBER_INDEX = formattedAmountString.search(/\d/);
+
+			if (FIRST_NUMBER_INDEX !== -1) {
+				// Insert the minus sign at the correct position
+				formattedAmountString =
+					formattedAmountString.slice(0, FIRST_NUMBER_INDEX) + '-' + formattedAmountString.slice(FIRST_NUMBER_INDEX);
+			}
+		}
+
+		return formattedAmountString;
 	} catch (error) {
 		console.error('formatAndAddCurrencySymbol unsuccessful. Fallback to just amount:', error);
 

@@ -153,10 +153,11 @@ describe('Currency Manipulation Utility Functions', () => {
 
 	describe('getCurrencySymbol', () => {
 		it('should return correct symbol for fiat currencies', () => {
-			expect(getCurrencySymbol('USD')).toBe('$US');
+			expect(getCurrencySymbol('USD')).toBe('$');
+			expect(getCurrencySymbol('CAD')).toBe('CA$');
 			expect(getCurrencySymbol('EUR')).toBe('€');
-			expect(getCurrencySymbol('GBP')).toBe('£GB');
-			expect(getCurrencySymbol('JPY')).toBe('JPY');
+			expect(getCurrencySymbol('GBP')).toBe('£');
+			expect(getCurrencySymbol('JPY')).toBe('¥');
 		});
 
 		it('should return correct symbol for cryptocurrencies', () => {
@@ -183,7 +184,7 @@ describe('Currency Manipulation Utility Functions', () => {
 
 		it('should handle case-insensitive input', () => {
 			// @ts-expect-error Testing for invalid input
-			expect(getCurrencySymbol('usd')).toBe('$US');
+			expect(getCurrencySymbol('usd')).toBe('$');
 			// @ts-expect-error Testing for invalid input
 			expect(getCurrencySymbol('btc')).toBe('₿');
 			// @ts-expect-error Testing for invalid input
@@ -192,7 +193,7 @@ describe('Currency Manipulation Utility Functions', () => {
 
 		it('should handle currencies with spaces', () => {
 			// @ts-expect-error Testing for invalid input
-			expect(getCurrencySymbol(' USD ')).toBe('$US');
+			expect(getCurrencySymbol(' USD ')).toBe('$');
 			// @ts-expect-error Testing for invalid input
 			expect(getCurrencySymbol(' BTC ')).toBe('₿');
 		});
@@ -211,45 +212,53 @@ describe('Currency Manipulation Utility Functions', () => {
 
 	describe('formatAndAddCurrencySymbol', () => {
 		it('should format fiat currencies correctly', () => {
-			expect(formatAndAddCurrencySymbol(1234.56, 'USD')).toBe('1\u202f234.56 USD');
-			expect(formatAndAddCurrencySymbol(1234.56, 'EUR')).toBe('1\u202f234.56 EUR');
-			expect(formatAndAddCurrencySymbol(1234.56, 'GBP')).toBe('1\u202f234.56 GBP');
+			expect(formatAndAddCurrencySymbol(1234.56, 'USD')).toBe('USD 1,234.56');
+			expect(formatAndAddCurrencySymbol(1234.56, 'EUR')).toBe('EUR 1,234.56');
+			expect(formatAndAddCurrencySymbol(1234.56, 'GBP')).toBe('GBP 1,234.56');
 		});
 
 		it('should format cryptocurrencies correctly', () => {
-			expect(formatAndAddCurrencySymbol(1.23456789, 'BTC')).toBe('1.23 BTC');
-			expect(formatAndAddCurrencySymbol(1234.56, 'ETH')).toBe('1\u202f234.56 ETH');
-			expect(formatAndAddCurrencySymbol(1000000, 'DOGE')).toBe('1\u202f000\u202f000.00 DOGE');
+			expect(formatAndAddCurrencySymbol(1.23456789, 'BTC')).toBe('BTC 1.23');
+			expect(formatAndAddCurrencySymbol(1234.56, 'ETH')).toBe('ETH 1,234.56');
+			expect(formatAndAddCurrencySymbol(1000000, 'DOGE')).toBe('DOGE 1,000,000.00');
 		});
 
 		it('should format testnet cryptocurrencies correctly', () => {
-			expect(formatAndAddCurrencySymbol(1.23456789, 'TBTC')).toBe('1.23 TBTC');
-			expect(formatAndAddCurrencySymbol(1234.56, 'TETH')).toBe('1\u202f234.56 TETH');
+			expect(formatAndAddCurrencySymbol(1.23456789, 'TBTC')).toBe('TBTC 1.23');
+			expect(formatAndAddCurrencySymbol(1234.56, 'TETH')).toBe('TETH 1,234.56');
 		});
 
 		it('should handle different currency display modes', () => {
-			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'code')).toBe('1\u202f234.56 USD');
-			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'narrowSymbol')).toBe('1\u202f234.56 $');
-			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'symbol')).toBe('1\u202f234.56 $US');
-			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'symbol', 'en-US')).toBe('$1,234.56');
+			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'code')).toBe('USD 1,234.56');
+			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'narrowSymbol')).toBe('$1,234.56');
+			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'symbol')).toBe('$1,234.56');
+			expect(formatAndAddCurrencySymbol(1234.56, 'CAD', false, 2, 2, 'symbol')).toBe('CA$1,234.56');
+			expect(formatAndAddCurrencySymbol(1234.56, 'CAD', false, 2, 2, 'symbol', true, 'en-CA')).toBe('$1,234.56');
+			expect(formatAndAddCurrencySymbol(1234.56, 'CAD', false, 2, 2, 'symbol', false, 'en-CA')).toBe('$1,234.56');
+			expect(formatAndAddCurrencySymbol(-1234.56, 'CAD', false, 2, 2, 'symbol', true, 'en-CA')).toBe('$-1,234.56');
+			expect(formatAndAddCurrencySymbol(-1234.56, 'CAD', false, 2, 2, 'symbol', false, 'en-CA')).toBe('-$1,234.56');
 		});
 
-		it('should use custom format', () => {
-			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'code', 'en-US')).toBe('USD 1,234.56');
+		it('should use custom format (en-CA)', () => {
+			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'code', true, 'en-CA')).toBe('USD 1,234.56');
+		});
+
+		it('should use custom format (fr-FR)', () => {
+			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 2, 'code', true, 'fr-FR')).toBe('1\u202f234,56 USD');
 		});
 
 		it('should handle rounding correctly', () => {
-			expect(formatAndAddCurrencySymbol(1234.56789, 'USD', true, 2, 2)).toBe('1\u202f234.57 USD');
-			expect(formatAndAddCurrencySymbol(1234.56489, 'USD', true, 3, 3)).toBe('1\u202f234.565 USD');
+			expect(formatAndAddCurrencySymbol(1234.56789, 'USD', true, 2, 2)).toBe('USD 1,234.57');
+			expect(formatAndAddCurrencySymbol(1234.56489, 'USD', true, 3, 3)).toBe('USD 1,234.565');
 		});
 
 		it('should handle different decimal places', () => {
-			expect(formatAndAddCurrencySymbol(1234.56789, 'USD', false, 4, 2)).toBe('1\u202f234.5678 USD');
-			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 0)).toBe('1\u202f234.56 USD');
+			expect(formatAndAddCurrencySymbol(1234.56789, 'USD', false, 4, 2)).toBe('USD 1,234.5678');
+			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 0)).toBe('USD 1,234.56');
 		});
 
 		it('should handle BigNumber input', () => {
-			expect(formatAndAddCurrencySymbol(BigNumber('1234.56789'), 'USD')).toBe('1\u202f234.56 USD');
+			expect(formatAndAddCurrencySymbol(BigNumber('1234.56789'), 'USD')).toBe('USD 1,234.56');
 		});
 
 		it('should handle invalid input', () => {
@@ -258,17 +267,17 @@ describe('Currency Manipulation Utility Functions', () => {
 		});
 
 		it('should handle negative numbers', () => {
-			expect(formatAndAddCurrencySymbol(-1234.56, 'USD')).toBe('-1\u202f234.56 USD');
+			expect(formatAndAddCurrencySymbol(-1234.56, 'USD')).toBe('USD -1,234.56');
 		});
 
 		it('should handle zero correctly', () => {
-			expect(formatAndAddCurrencySymbol(0, 'USD')).toBe('0.00 USD');
-			expect(formatAndAddCurrencySymbol(-0, 'USD')).toBe('0.00 USD');
+			expect(formatAndAddCurrencySymbol(0, 'USD')).toBe('USD 0.00');
+			expect(formatAndAddCurrencySymbol(-0, 'USD')).toBe('USD 0.00');
 		});
 
 		it('should handle cryptocurrency symbols correctly', () => {
-			expect(formatAndAddCurrencySymbol(1234.56, 'BTC', false, 2, 2, 'narrowSymbol')).toBe('1\u202f234.56 ₿');
-			expect(formatAndAddCurrencySymbol(1234.56, 'ETH', false, 2, 2, 'narrowSymbol')).toBe('1\u202f234.56 Ξ');
+			expect(formatAndAddCurrencySymbol(1234.56, 'BTC', false, 2, 2, 'narrowSymbol')).toBe('₿ 1,234.56');
+			expect(formatAndAddCurrencySymbol(1234.56, 'ETH', false, 2, 2, 'narrowSymbol')).toBe('Ξ 1,234.56');
 		});
 
 		it('should handle invalid decimal parameters', () => {
@@ -277,7 +286,7 @@ describe('Currency Manipulation Utility Functions', () => {
 		});
 
 		it('should handle minimum decimal greater than maximum decimal', () => {
-			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 4)).toBe('1\u202f234.56 USD');
+			expect(formatAndAddCurrencySymbol(1234.56, 'USD', false, 2, 4)).toBe('USD 1,234.56');
 		});
 	});
 
@@ -297,7 +306,7 @@ describe('Currency Manipulation Utility Functions', () => {
 		it('should handle different currency display modes', () => {
 			expect(labelCurrency(1000000, 'en', 'USD', 'code')).toBe('1.00 Million USD');
 			expect(labelCurrency(1000000, 'en', 'USD', 'narrowSymbol')).toBe('1.00 Million $');
-			expect(labelCurrency(1000000, 'en', 'USD', 'symbol')).toBe('1.00 Million $US');
+			expect(labelCurrency(1000000, 'en', 'CAD', 'symbol')).toBe('1.00 Million CA$');
 			expect(labelCurrency(1000000, 'en', 'USD', 'name')).toBe('1.00 Million US dollars');
 			expect(labelCurrency(1000000, 'en', 'USD', 'none')).toBe('1.00 Million');
 		});

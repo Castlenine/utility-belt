@@ -30,12 +30,12 @@ const capitalizeFirstLetterOnly = (string: string | undefined, isRestBecomeLower
  * where the comma is used as a decimal separator and needs to be converted to a dot for certain languages or systems.
  *
  * @param string - The string in which the last comma is to be replaced with a dot.
- * @param removeTheExtraCommas - If true, removes all other commas from the string. Useful to remove thousands separators. Defaults to true.
+ * @param removeOtherCommas - If true, removes all other commas from the string. Useful to remove thousands separators. Defaults to true.
  *
  * @returns A new string with the last comma replaced by a dot. If no comma is present in the input string, the original string is returned unchanged.
  * If the input is not a string or is an empty string, an empty string is returned.
  */
-const replaceLastCommaByDot = (string: string | undefined, removeTheExtraCommas = true): string => {
+const replaceLastCommaByDot = (string: string | undefined, removeOtherCommas = true): string => {
 	if (typeof string !== 'string') {
 		console.error('replaceLastCommaByDot: invalid string');
 
@@ -52,9 +52,9 @@ const replaceLastCommaByDot = (string: string | undefined, removeTheExtraCommas 
 		return string; // No comma found, return original string
 	}
 
-	const STRING_FORMATTED = string.substring(0, LAST_INDEX_OF_COMMA) + '.' + string.substring(LAST_INDEX_OF_COMMA + 1);
+	const STRING_FORMATTED = `${string.substring(0, LAST_INDEX_OF_COMMA)}.${string.substring(LAST_INDEX_OF_COMMA + 1)}`;
 
-	return removeTheExtraCommas ? STRING_FORMATTED.replace(/,/g, '') : STRING_FORMATTED;
+	return removeOtherCommas ? STRING_FORMATTED.replace(/,/g, '') : STRING_FORMATTED;
 };
 
 /*
@@ -83,10 +83,15 @@ const isStringContainsNumber = (string: string | undefined): boolean => {
  *
  * @param string - The string from which non-numeric characters will be removed.
  * @param haveReplaceLastCommaByDot - If true, replaces commas with dots. Defaults to true.
+ * @param removeOtherCommas - If haveReplaceLastCommaByDot is true and this parameter is true, removes all other commas from the string. Useful to remove thousands separators. Defaults to true.
  *
  * @returns A new string containing only numeric characters. If the input is not a string or is an empty string, an empty string is returned.
  */
-const removeNonNumericCharactersFromString = (string: string | undefined, haveReplaceLastCommaByDot = true): string => {
+const removeNonNumericCharactersFromString = (
+	string: string | undefined,
+	haveReplaceLastCommaByDot = true,
+	removeOtherCommas = true,
+): string => {
 	if (typeof string !== 'string') {
 		console.error('removeNonNumericCharactersFromString: invalid string');
 
@@ -98,7 +103,7 @@ const removeNonNumericCharactersFromString = (string: string | undefined, haveRe
 	}
 
 	if (haveReplaceLastCommaByDot) {
-		string = replaceLastCommaByDot(string);
+		string = replaceLastCommaByDot(string, removeOtherCommas);
 	}
 
 	const IS_NEGATIVE = string.startsWith('-');

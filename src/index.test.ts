@@ -5,7 +5,19 @@ import { describe, it, expect } from 'vitest';
 import utilityBelt from './modules';
 
 // Named exports for individual modules
-import { atomicUnit, cookie, cryptocurrency, currency, delay, email, number, object, string, time } from './modules';
+import {
+	atomicUnit,
+	cookie,
+	cryptocurrency,
+	currency,
+	delay,
+	email,
+	number,
+	object,
+	string,
+	time,
+	uuid,
+} from './modules';
 
 // Named exports for individual functions
 import {
@@ -61,6 +73,8 @@ import {
 	isDateUtc,
 	convertDateToUTC,
 	convertDateToLocalTime,
+	generateUUID,
+	generateCryptoRandomUUID,
 } from './index';
 
 describe('all modules importing', () => {
@@ -177,6 +191,11 @@ describe('all modules importing', () => {
 		expect(utilityBelt.convertDateToUTC).toBeDefined();
 		expect(utilityBelt.convertDateToLocalTime).toBeDefined();
 	});
+
+	it('should import from all modules uuid', () => {
+		expect(utilityBelt.generateUUID).toBeDefined();
+		expect(utilityBelt.generateCryptoRandomUUID).toBeDefined();
+	});
 });
 
 describe('Named exports for individual modules importing', () => {
@@ -279,6 +298,13 @@ describe('Named exports for individual modules importing', () => {
 		expect(time.isDateUtc).toBeDefined();
 		expect(time.convertDateToUTC).toBeDefined();
 		expect(time.convertDateToLocalTime).toBeDefined();
+	});
+
+	it('should import with individual import uuid', () => {
+		expect(uuid).toBeDefined();
+
+		expect(uuid.generateUUID).toBeDefined();
+		expect(uuid.generateCryptoRandomUUID).toBeDefined();
 	});
 });
 
@@ -494,5 +520,13 @@ describe('Named exports for individual functions importing', () => {
 
 	it('should import with individual import convertDateToLocalTime', () => {
 		expect(convertDateToLocalTime).toBeDefined();
+	});
+
+	it('should import with individual import generateUUID', () => {
+		expect(generateUUID).toBeDefined();
+	});
+
+	it('should import with individual import generateCryptoRandomUUID', () => {
+		expect(generateCryptoRandomUUID).toBeDefined();
 	});
 });
