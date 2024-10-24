@@ -67,7 +67,7 @@ describe('Cookie utils', () => {
 			expect(VALUE).toBe('');
 		});
 
-		it('should not crash or throw an error on malformed cookies', () => {
+		it('should log an error to the console rather than throwing an exception or crashing.', () => {
 			const CONSOLE_ERROR_SPY = vi.spyOn(console, 'error');
 			const COOKIE = 'user==JohnDoe; session==abc123';
 			const VALUE = parseValueFromCookie(COOKIE, 'user');

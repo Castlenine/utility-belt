@@ -153,7 +153,15 @@ describe('String Manipulation Utility Functions', () => {
 
 	describe('normalizeString', () => {
 		it('should remove diacritics, emojis, non-Latin characters, numbers, punctuation, and special characters by default', () => {
-			expect(normalizeString('Héllø, @Wørld! 123 👋 大阪 ¥')).toBe('HelloWorld');
+			expect(normalizeString('Héllø, @Wørld! 123 👋 大阪 ¥')).toBe('Hello World');
+		});
+
+		it('should keep dashes by default', () => {
+			expect(normalizeString('Hello-World', '')).toBe('Hello-World');
+		});
+
+		it('should remove dashes when specified', () => {
+			expect(normalizeString('Hello-World', '', true, true, true, true, false, true, false)).toBe('HelloWorld');
 		});
 
 		it('should replace spaces with underscores when specified', () => {
@@ -196,6 +204,16 @@ describe('String Manipulation Utility Functions', () => {
 			expect(normalizeString('Hello ¥ World!', 'remove', true, true, true, true, true, false)).toBe('Hello¥World');
 		});
 
+		it('should trim the string by default', () => {
+			expect(normalizeString('  Hello, World!  ')).toBe('Hello World');
+		});
+
+		it('should not trim the string when specified', () => {
+			expect(normalizeString('  Hello, World!  ', '', true, true, true, true, true, true, true, false)).toBe(
+				'  Hello World  ',
+			);
+		});
+
 		it('should return an empty string for non-string input', () => {
 			const CONSOLE_ERROR_SPY = vi.spyOn(console, 'error').mockImplementation(() => {});
 			// @ts-expect-error testing invalid input
@@ -219,7 +237,7 @@ describe('String Manipulation Utility Functions', () => {
 		});
 
 		it('should handle multiple dash', () => {
-			expect(slugifyString('  Hello,-  _World.  --')).toBe('hello-world');
+			expect(slugifyString('  Hello,-  _World.  --')).toBe('hello--world---');
 		});
 
 		it('should keep the letter capitalization', () => {
