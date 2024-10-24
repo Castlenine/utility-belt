@@ -159,30 +159,34 @@ const numberToString = (number: number | BigNumber | undefined): string => {
  * It doesn't change the case of the characters
  *
  * @param string - The string to normalize
- * @param spaceReplacementType - The type of replacement to use for spaces. It can be 'remove', 'underscore' or 'dash'. Set an empty string to keep spaces (`''`). Default is 'remove'
+ * @param spaceReplacementType - The type of replacement to use for spaces. It can be 'remove', 'underscore' or 'dash'. Set an empty string to keep spaces (`''`). Default is '' (keep spaces)
  * @param haveRemoveDiacritic - Flag to indicate if diacritics should be removed. Default is true
  * @param haveRemoveEmoji - Flag to indicate if emojis should be removed. Default is true
  * @param haveRemoveNonLatin - Flag to indicate if non-Latin characters should be removed. Default is true
  * @param haveRemoveNumber - Flag to indicate if numbers should be removed. Default is true
  * @param haveRemovePunctuation - Flag to indicate if punctuation should be removed. Default is true
  * @param haveRemoveSpecialCharacters - Flag to indicate if special characters should be removed. Default is true
+ * @param keepHyphensAndDash - Flag to indicate if hyphens and dashes should be kept. Default is true
+ * @param isTrimmed - Flag to indicate if the string should be trimmed. Default is true
  *
  * @returns The normalized string
  *
  * @example
- * normalizeString('Hello, World!'); // 'HelloWorld'
+ * normalizeString('Hello, World!'); // 'Hello World'
  * normalizeString('Hello, World!', 'underscore'); // 'Hello_World'
- * normalizeString('A ticket to 大阪 costs ¥2000 👌.'); // 'Atickettocosts'
+ * normalizeString('A ticket to 大阪 costs ¥2000 👌.', 'remove'); // 'Atickettocosts'
  */
 const normalizeString = (
 	string: string | undefined,
-	spaceReplacementType: 'remove' | 'underscore' | 'dash' | '' = 'remove',
+	spaceReplacementType: 'remove' | 'underscore' | 'dash' | '' = '',
 	haveRemoveDiacritic = true,
 	haveRemoveEmoji = true,
 	haveRemoveNonLatin = true,
 	haveRemoveNumber = true,
 	haveRemovePunctuation = true,
 	haveRemoveSpecialCharacters = true,
+	keepHyphensAndDash = true,
+	isTrimmed = true,
 ): string => {
 	if (typeof string !== 'string') {
 		console.error('normalizeString: string parameter is not a string');
@@ -217,12 +221,18 @@ const normalizeString = (
 	}
 
 	if (haveRemovePunctuation) {
-		normalizedString = normalizedString.replace(/\p{P}/gu, ''); // Remove punctuation
+		normalizedString = normalizedString.replace(/(?![-−‐‑‒–—―])\p{P}/gu, ''); // Remove all punctuation except hyphens and dashes
+	}
+
+	if (!keepHyphensAndDash) {
+		normalizedString = normalizedString.replace(/[-−‐‑‒–—―]/gu, ''); // Remove all hyphens and dashes
 	}
 
 	if (haveRemoveSpecialCharacters) {
 		normalizedString = normalizedString.replace(/\p{Sc}/gu, ''); // Remove special characters
 	}
+
+	normalizedString = isTrimmed ? normalizedString.trim() : normalizedString;
 
 	switch (spaceReplacementType) {
 		case 'remove':
